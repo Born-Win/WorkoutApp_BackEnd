@@ -1,0 +1,12 @@
+{
+    "postgresql": {
+        "url": "postgres://postgres:postgres@localhost:5432/workout",
+        "options": {
+          "dialect": "postgres",
+          "logging": true,
+          "dialectOptions": {
+            "ssl": false
+          }
+        }
+    }
+}
