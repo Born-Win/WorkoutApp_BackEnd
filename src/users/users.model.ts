@@ -1,4 +1,4 @@
-import { } from '../results/results.model';
+import {} from '../results/results.model';
 
 export type User = {
   id: number;
@@ -8,6 +8,5 @@ export type User = {
   // associations
   // results: {
 
-    
   // }[]
-}
+};
