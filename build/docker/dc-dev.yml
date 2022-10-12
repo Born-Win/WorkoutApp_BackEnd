@@ -1,0 +1,30 @@
+version: "3.2"
+networks:
+  workout-network:
+
+services:
+  app-backend:
+    depends_on:
+    - pg
+    build:
+      context: ../../
+      dockerfile: ./build/docker/dev/Dockerfile
+    environment:
+      - NODE_ENV=dev-docker
+    ports:
+      - "8080:3000"
+    networks:
+      - workout-network
+  pg:
+    container_name: postgresql
+    build:
+      context: ../../
+      dockerfile: ./build/docker/postgresql/Dockerfile
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=workout
+    ports:
+      - "5432:5432"
+    networks:
+      - workout-network
