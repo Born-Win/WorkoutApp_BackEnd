@@ -2,6 +2,9 @@
 /dist
 /node_modules
 
+# Docker
+build/docker/postgresql/data
+
 # Logs
 logs
 *.log

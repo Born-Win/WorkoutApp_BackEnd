@@ -8,5 +8,18 @@
           "ssl": false
         }
       }
+  },
+  "bcrypt": {
+    "saltRounds": 10
+  },
+  "jwt": {
+    "accessToken": {
+      "secret": "SECRET",
+      "expirationTime": 604800000
+    },
+    "refreshToken": {
+      "secret": "SECRET_REF",
+      "expirationTime": 604800000
+    }
   }
 }
