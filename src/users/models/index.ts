@@ -8,7 +8,12 @@ import {
   BeforeSave
 } from 'sequelize-typescript';
 
-@Table({ tableName: 'users' })
+@Table({
+  tableName: 'users',
+  updatedAt: 'updated_at',
+  createdAt: 'created_at',
+  indexes: [{ unique: true, fields: ['email'] }]
+})
 export class User extends Model {
   @Column({
     type: DataType.INTEGER,
