@@ -35,10 +35,7 @@ export class AuthController {
         user: registredUser
       };
     } catch (err) {
-      if (
-        err.name === 'MongoServerError' &&
-        err.message.match('duplicate key error')
-      ) {
+      if (err.name === 'SequelizeUniqueConstraintError') {
         throw new UnprocessableEntityException(
           'The email has already been taken'
         );
