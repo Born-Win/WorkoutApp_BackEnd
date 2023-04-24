@@ -3,11 +3,9 @@ networks:
   workout-network:
 
 services:
-  pg:
-    container_name: postgresql
-    build:
-      context: ../../
-      dockerfile: ./build/docker/postgresql/Dockerfile
+  postgres:
+    image: postgres:latest
+    container_name: postgres
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -16,3 +14,7 @@ services:
       - "5432:5432"
     networks:
       - workout-network
+    volumes:
+      - ./postgresql/data:/var/lib/postgresql/data
+volumes:
+  postgresql:
