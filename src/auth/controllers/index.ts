@@ -10,11 +10,11 @@ import {
   HttpCode,
   HttpStatus
 } from '@nestjs/common';
-import { UserAuthService } from '../users/services/users.auth';
-import { LocalAuthGuard } from './guards/local-auth.guard';
-import { UserRegistrationDto } from './dto';
-import { JoiValidationPipe } from '../pipes/joi';
-import { authValidationSchema } from './validation/schemas';
+import { UserAuthService } from '../../users/services/users.auth';
+import { LocalAuthGuard } from '../guards/local-auth.guard';
+import { UserRegistrationDto } from '../dto';
+import { JoiValidationPipe } from '../../pipes/joi';
+import { authValidationSchema } from '../validation/schemas';
 
 @Controller('auth')
 export class AuthController {
