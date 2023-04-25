@@ -1,0 +1,26 @@
+{
+  "apiDomain": "http://localhost:3000",
+  "postgresql": {
+      "url": "postgres://postgres:postgres@localhost:5432/workout",
+      "options": {
+        "dialect": "postgres",
+        "logging": true,
+        "dialectOptions": {
+          "ssl": false
+        }
+      }
+  },
+  "bcrypt": {
+    "saltRounds": 10
+  },
+  "jwt": {
+    "accessToken": {
+      "secret": "SECRET",
+      "expirationTime": 604800000
+    },
+    "refreshToken": {
+      "secret": "SECRET_REF",
+      "expirationTime": 604800000
+    }
+  }
+}

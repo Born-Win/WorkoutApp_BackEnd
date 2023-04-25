@@ -1,0 +1,10 @@
+{
+    "dev-local": {
+        "host": "localhost",
+        "username": "postgres",
+        "password": "postgres",
+        "database": "workout",
+        "dialect": "postgres",
+        "seederStorage": "sequelize"
+    }
+}
