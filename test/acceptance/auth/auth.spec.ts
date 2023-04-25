@@ -76,8 +76,8 @@ describe('Auth API', () => {
   describe('Login', () => {
     it('Should return tokens in cookies', async () => {
       const userToLogin = {
-        email: DEFAULT_USERS.ADMIN_1.email,
-        password: DEFAULT_USERS.ADMIN_1.password
+        email: DEFAULT_USERS.ADMIN_1.EMAIL,
+        password: DEFAULT_USERS.ADMIN_1.PASSWORD
       };
       const result = await axios.post(`${authApi}/login`, userToLogin);
       expect(result.status).toEqual(HttpStatus.OK);
@@ -97,8 +97,8 @@ describe('Auth API', () => {
 
     it('Should return incorrect password error', async () => {
       const userToLogin = {
-        email: DEFAULT_USERS.ADMIN_1.email,
-        password: `${DEFAULT_USERS.ADMIN_1.password}${faker.word.noun()}` // incorrect password
+        email: DEFAULT_USERS.ADMIN_1.EMAIL,
+        password: `${DEFAULT_USERS.ADMIN_1.PASSWORD}${faker.word.noun()}` // incorrect password
       };
       const result = await axios.post(`${authApi}/login`, userToLogin, {
         validateStatus: null
@@ -113,8 +113,8 @@ describe('Auth API', () => {
     it('Should update tokens and return them', async () => {
       // 1. login
       const userToLogin = {
-        email: DEFAULT_USERS.ADMIN_1.email,
-        password: DEFAULT_USERS.ADMIN_1.password
+        email: DEFAULT_USERS.ADMIN_1.EMAIL,
+        password: DEFAULT_USERS.ADMIN_1.PASSWORD
       };
       const loginResult = await axios.post(`${authApi}/login`, userToLogin);
       expect(loginResult.status).toEqual(HttpStatus.OK);
@@ -152,8 +152,8 @@ describe('Auth API', () => {
     it('Should return forbidden error', async () => {
       // 1. login
       const userToLogin = {
-        email: DEFAULT_USERS.ADMIN_1.email,
-        password: DEFAULT_USERS.ADMIN_1.password
+        email: DEFAULT_USERS.ADMIN_1.EMAIL,
+        password: DEFAULT_USERS.ADMIN_1.PASSWORD
       };
 
       const loginResult = await axios.post(`${authApi}/login`, userToLogin);
