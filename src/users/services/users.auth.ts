@@ -4,7 +4,8 @@ import config = require('config');
 import { Injectable } from '@nestjs/common';
 import {
   UnauthorizedException,
-  ForbiddenException
+  ForbiddenException,
+  BadRequestException
 } from '@nestjs/common/exceptions';
 import { promisifyJwtSign } from '../../libs/jsonwebtoken/promisify-jwt-sign';
 import { UserRepository } from '../repositories/user';
@@ -22,7 +23,9 @@ export class UserAuthService {
 
   async registerUser(userData: UserRegistrationDto) {
     if (userData.password !== userData.confirmation_password) {
-      throw new Error('Password and confirmation password do not match');
+      throw new BadRequestException(
+        'Password and confirmation password do not match'
+      );
     }
 
     const createdUser = await this.userRepository.createOne(userData);
@@ -34,7 +37,7 @@ export class UserAuthService {
     const user = await this.userRepository.findOneByEmail(email);
 
     if (!user) {
-      throw new UnauthorizedException('Incorrect login');
+      throw new UnauthorizedException('Incorrect email');
     }
 
     const passwordValid = await bcrypt.compare(password, user.password);
