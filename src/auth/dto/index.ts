@@ -1,6 +1,18 @@
-export class UserRegistrationDto {
+import { ApiProperty } from '@nestjs/swagger';
+
+export class UserLoginDto {
+  @ApiProperty()
   email: string;
+  @ApiProperty()
   password: string;
+}
+
+export class UserRegistrationDto {
+  @ApiProperty()
+  email: string;
+  @ApiProperty()
+  password: string;
+  @ApiProperty()
   confirmation_password: string;
 
   constructor(data) {
