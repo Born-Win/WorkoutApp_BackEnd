@@ -1,13 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UserReadDto {
+export class MuscleGroupReadDto {
   @ApiProperty()
   id: number;
   @ApiProperty()
-  email: string;
+  name: string;
 
   constructor(data) {
     this.id = data.id;
-    this.email = data.email;
+    this.name = data.name;
   }
 }
