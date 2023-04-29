@@ -8,6 +8,12 @@ type AuthInput = {
       confirmation_password: string;
     };
   };
+  login: {
+    body: {
+      email: string;
+      password: string;
+    };
+  };
 };
 
 export const authValidationSchema = {
@@ -16,6 +22,12 @@ export const authValidationSchema = {
       email: Joi.string().email().required(),
       password: Joi.string().required(),
       confirmation_password: Joi.string().required()
+    }).required()
+  }),
+  login: Joi.object<AuthInput['login']>({
+    body: Joi.object({
+      email: Joi.string().email().required(),
+      password: Joi.string().required()
     }).required()
   })
 };
