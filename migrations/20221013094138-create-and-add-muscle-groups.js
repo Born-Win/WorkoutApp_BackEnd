@@ -29,7 +29,7 @@ const muscleGroups = [
 
 module.exports = {
   up: (queryInterface, DataTypes) => {
-    return queryInterface.sequelize.transaction(async (transaction) => {
+    return queryInterface.sequelize.transaction(async transaction => {
       await queryInterface.createTable(
         muscleGroupTableName,
         {
@@ -52,7 +52,7 @@ module.exports = {
     });
   },
 
-  down: (queryInterface) => {
+  down: queryInterface => {
     return queryInterface.dropTable(muscleGroupTableName);
   }
 };

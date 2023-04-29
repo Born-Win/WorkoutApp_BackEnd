@@ -4,10 +4,8 @@ import { faker } from '@faker-js/faker';
 import { NestApplication } from '@nestjs/core';
 import { HttpStatus } from '@nestjs/common';
 import { App } from '../../../src/app/app';
-import { DEFAULT_USERS } from '../../consts';
+import { DEFAULT_USERS, DEFAULT_USER_PASSWORD } from '../../consts';
 import { UserRegistrationDto } from '../../../src/auth/dto';
-
-const DEFAULT_USER_PASSWORD = '123456';
 
 describe('Auth API', () => {
   const PORT = process.env.PORT || 3000;

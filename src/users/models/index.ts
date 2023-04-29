@@ -11,8 +11,7 @@ import {
 @Table({
   tableName: 'users',
   updatedAt: 'updated_at',
-  createdAt: 'created_at',
-  indexes: [{ unique: true, fields: ['email'] }]
+  createdAt: 'created_at'
 })
 export class User extends Model {
   @Column({
@@ -24,7 +23,8 @@ export class User extends Model {
 
   @Column({
     type: DataType.STRING,
-    allowNull: false
+    allowNull: false,
+    unique: true
   })
   email: string;
 

@@ -87,6 +87,7 @@ export class AuthController {
       examples: ['Incorrect login', 'Incorrect email']
     })
   )
+  @ApiBadRequestResponse(HTTP_EXCEPTION_DEFAULT_RESPONSE)
   @ApiForbiddenResponse(HTTP_EXCEPTION_DEFAULT_RESPONSE)
   @ApiOkResponse({
     headers: {
