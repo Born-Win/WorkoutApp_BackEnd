@@ -1,0 +1,37 @@
+version: "3.2"
+networks:
+  workout-network:
+
+services:
+  app-backend:
+    depends_on:
+    - postgres
+    build:
+      context: ../../
+      dockerfile: ./build/docker/dev-docker/Dockerfile
+    environment:
+      - NODE_ENV=dev-docker
+    ports:
+      - "8080:3000"
+    networks:
+      - workout-network
+    command: bash -c "npm run prepare:db:dev-docker && NODE_ENV=dev-docker npm start"
+    
+
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=workout
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - workout-network
+      
