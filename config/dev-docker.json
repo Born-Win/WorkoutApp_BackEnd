@@ -1,6 +1,6 @@
 {
   "postgresql": {
-      "url": "postgres://postgres:postgres@localhost:5432/workout",
+      "url": "postgres://postgres:postgres@postgres:5432/workout",
       "options": {
         "dialect": "postgres",
         "logging": true,
