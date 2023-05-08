@@ -6,7 +6,11 @@ import { HttpStatus } from '@nestjs/common';
 import { App } from '../../../src/app/app';
 import { UserReadDto } from '../../../src/users/dto';
 import { UserRegistrationDto } from '../../../src/auth/dto';
-import { ExerciseCreateDto, ExerciseReadDto } from '../../../src/exercises/dto';
+import {
+  ExerciseCreateDto,
+  ExerciseReadDto,
+  ExerciseShortReadDto
+} from '../../../src/exercises/dto';
 import { DEFAULT_USER_PASSWORD, MUSCLE_GROUPS_DATA } from '../../consts';
 import { createRequestCookieHeaders } from '../auth/utils';
 
@@ -33,7 +37,7 @@ async function createExercise(
 
   // 2. get just created exercise
   const getExerciseResult = await axios.get(
-    `${exercisesApi}/${createdExerciseId}`,
+    `${exercisesApi}/view/${createdExerciseId}`,
     requestCookieHeaders
   );
   expect(getExerciseResult.status).toEqual(HttpStatus.OK);
@@ -83,6 +87,50 @@ describe('Exercises API', () => {
     cookies = result.headers['set-cookie'];
   });
 
+  describe('Get', () => {
+    it('should return all created exercises by muscle group', async () => {
+      const requestCookieHeaders = createRequestCookieHeaders(cookies);
+
+      // 1. create exercises
+      const createdExercises: ExerciseShortReadDto[] = [];
+
+      const muscleGroupId = MUSCLE_GROUPS_DATA[0].id;
+
+      for (let i = 0; i < 2; i++) {
+        const exerciseData: ExerciseCreateDto = {
+          user_id: createdUser.id,
+          name: faker.word.noun(),
+          muscle_group_id: muscleGroupId
+        };
+        const creationResult = await axios.post(
+          exercisesApi,
+          exerciseData,
+          requestCookieHeaders
+        );
+        expect(creationResult.status).toEqual(HttpStatus.CREATED);
+        expect(creationResult.data.item).toMatchObject(exerciseData);
+
+        const { id, name } = creationResult.data.item as ExerciseReadDto;
+        createdExercises.push({
+          id,
+          name
+        });
+      }
+
+      // 2. get just created exercises
+      const getExercisesResult = await axios.get(`${exercisesApi}/all`, {
+        ...requestCookieHeaders,
+        params: {
+          muscle_group_id: muscleGroupId
+        }
+      });
+      expect(getExercisesResult.status).toEqual(HttpStatus.OK);
+      expect(getExercisesResult.data.items).toEqual(
+        expect.arrayContaining(createdExercises)
+      );
+    });
+  });
+
   describe('Create', () => {
     it('Should return create and return exercise', async () => {
       // 1. create exercise
@@ -103,7 +151,7 @@ describe('Exercises API', () => {
 
       // 2. get just created exercise
       const getExerciseResult = await axios.get(
-        `${exercisesApi}/${createdExerciseId}`,
+        `${exercisesApi}/view/${createdExerciseId}`,
         createRequestCookieHeaders(cookies)
       );
       expect(getExerciseResult.status).toEqual(HttpStatus.OK);
@@ -132,7 +180,7 @@ describe('Exercises API', () => {
 
       // 2. get just created exercise
       const getExerciseResult = await axios.get(
-        `${exercisesApi}/${createdExerciseId}`,
+        `${exercisesApi}/view/${createdExerciseId}`,
         createRequestCookieHeaders(cookies)
       );
       expect(getExerciseResult.status).toEqual(HttpStatus.OK);
@@ -183,7 +231,7 @@ describe('Exercises API', () => {
 
       // 3. get renamed exercise
       const getExerciseResult = await axios.get(
-        `${exercisesApi}/${exerciseId}`,
+        `${exercisesApi}/view/${exerciseId}`,
         requestCookieHeaders
       );
       expect(getExerciseResult.status).toEqual(HttpStatus.OK);
@@ -251,10 +299,13 @@ describe('Exercises API', () => {
     expect(deletionResult.status).toEqual(HttpStatus.OK);
 
     // 3. check deletion
-    const getExerciseResult = await axios.get(`${exercisesApi}/${exerciseId}`, {
-      ...requestCookieHeaders,
-      validateStatus: null
-    });
+    const getExerciseResult = await axios.get(
+      `${exercisesApi}/view/${exerciseId}`,
+      {
+        ...requestCookieHeaders,
+        validateStatus: null
+      }
+    );
     expect(getExerciseResult.status).toEqual(HttpStatus.NOT_FOUND);
     expect(getExerciseResult.data.message).toEqual(
       `Exercise with id = "${exerciseId}" not found`

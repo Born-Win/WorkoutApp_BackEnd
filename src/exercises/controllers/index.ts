@@ -6,6 +6,8 @@ import {
   Delete,
   Body,
   Param,
+  Query,
+  Req,
   UseGuards,
   UsePipes
 } from '@nestjs/common';
@@ -29,11 +31,15 @@ import {
 } from '../../libs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt.guard';
 import { ExerciseService } from '../services';
-import { ExerciseCreateDto, ExerciseReadDto } from '../dto';
+import {
+  ExerciseCreateDto,
+  ExerciseReadDto,
+  ExerciseShortReadDto
+} from '../dto';
 import { JoiValidationPipe } from '../../pipes/joi';
 import { exerciseValidationSchema } from '../validation/schemas';
 
-@ApiExtraModels(ExerciseReadDto)
+@ApiExtraModels(ExerciseReadDto, ExerciseShortReadDto)
 @ApiTags('Exercises')
 @UseGuards(JwtAuthGuard)
 @Controller('exercises')
@@ -54,13 +60,40 @@ export class ExerciseController {
     })
   )
   @ApiCookieAuth('accessToken')
-  @Get(':id')
+  @Get('view/:id')
   async getOne(@Param('id') id: string) {
     const exercise = await this.exerciseService.getOne(id);
 
     return {
       success: true,
       item: exercise
+    };
+  }
+
+  @ApiUnauthorizedResponse(HTTP_EXCEPTION_DEFAULT_RESPONSE)
+  @ApiBadRequestResponse(HTTP_EXCEPTION_DEFAULT_RESPONSE)
+  @ApiOkResponse(
+    generateSuccessfulContentObject({
+      items: {
+        type: 'array',
+        items: {
+          $ref: getSchemaPath(ExerciseShortReadDto)
+        }
+      }
+    })
+  )
+  @ApiCookieAuth('accessToken')
+  @UsePipes(new JoiValidationPipe(exerciseValidationSchema.getAll))
+  @Get('all')
+  async getAll(@Query() query: { muscle_group_id: string }, @Req() req) {
+    const exercises = await this.exerciseService.getAll(
+      req.user.id,
+      +query.muscle_group_id
+    );
+
+    return {
+      success: true,
+      items: exercises
     };
   }
 

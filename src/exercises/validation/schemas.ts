@@ -1,6 +1,11 @@
 import Joi = require('joi');
 
 type ExercisesInput = {
+  getAll: {
+    query: {
+      muscle_group_id: number;
+    };
+  };
   createOne: {
     body: {
       name: string;
@@ -17,6 +22,11 @@ type ExercisesInput = {
 };
 
 export const exerciseValidationSchema = {
+  getAll: Joi.object<ExercisesInput['getAll']>({
+    query: Joi.object({
+      muscle_group_id: Joi.number().positive().required() // numeric string
+    }).required()
+  }),
   createOne: Joi.object<ExercisesInput['createOne']>({
     body: Joi.object({
       name: Joi.string().min(2).max(30).required(),
