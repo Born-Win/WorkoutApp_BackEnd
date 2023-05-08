@@ -5,7 +5,11 @@ import {
 } from '@nestjs/common';
 import { UniqueConstraintError } from 'sequelize';
 import { ExerciseRepository } from '../repositories';
-import { ExerciseCreateDto, ExerciseReadDto } from '../dto';
+import {
+  ExerciseCreateDto,
+  ExerciseReadDto,
+  ExerciseShortReadDto
+} from '../dto';
 
 @Injectable()
 export class ExerciseService {
@@ -19,6 +23,15 @@ export class ExerciseService {
     }
 
     return new ExerciseReadDto(foundExercise);
+  }
+
+  async getAll(user_id: number, muscle_group_id: number) {
+    const exercises = await this.exerciseRepository.findAll({
+      user_id,
+      muscle_group_id
+    });
+
+    return exercises.map(exercise => new ExerciseShortReadDto(exercise));
   }
 
   async createOne(exerciseData: ExerciseCreateDto) {

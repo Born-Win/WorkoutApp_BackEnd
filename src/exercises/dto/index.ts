@@ -32,3 +32,14 @@ export class ExerciseReadDto {
     this.muscle_group_id = data.muscle_group_id;
   }
 }
+export class ExerciseShortReadDto {
+  @ApiProperty()
+  id: number;
+  @ApiProperty()
+  name: string;
+
+  constructor(data) {
+    this.id = data.id;
+    this.name = data.name;
+  }
+}

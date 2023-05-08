@@ -14,6 +14,10 @@ export class ExerciseRepository {
     private exercise: typeof Exercise
   ) {}
 
+  findAll(params: Partial<ExerciseDataToCreate>) {
+    return this.exercise.findAll({ where: params });
+  }
+
   findOneById(id: string) {
     return this.exercise.findByPk(id);
   }
