@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { Exercise } from '../models';
+import { Exercise } from '../models/exercise';
 
 type ExerciseDataToCreate = {
   name: string; // 2-30 characters

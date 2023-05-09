@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { Exercise } from './models';
+import { Exercise } from './models/exercise';
 import { ExerciseController } from './controllers';
 import { ExerciseService } from './services';
 import { ExerciseRepository } from './repositories';
