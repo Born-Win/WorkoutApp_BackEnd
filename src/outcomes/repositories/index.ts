@@ -32,14 +32,15 @@ export class OutcomeRepository {
     private outcome: typeof Outcome
   ) {}
 
-  findAll(outcomeFilterOptions: Partial<OutcomeData>) {
-    return this.outcome.findAll({
+  async findAll(outcomeFilterOptions: Partial<OutcomeData>) {
+    const result = await this.outcome.findAll({
       include: {
         model: Set,
         as: 'sets'
       },
       where: outcomeFilterOptions
     });
+    return safeToJson(result);
   }
 
   async createOne(outcomeData: OutcomeDataToCreate, options?: Options) {
@@ -50,9 +51,5 @@ export class OutcomeRepository {
   async createMany(outcomeDataArray: OutcomeDataToCreate[], options?: Options) {
     const result = await this.outcome.bulkCreate(outcomeDataArray, options);
     return safeToJson(result);
-  }
-
-  updateOne(id: number, outcomeData: { weight: string }) {
-    return this.outcome.update(outcomeData, { where: { id } });
   }
 }

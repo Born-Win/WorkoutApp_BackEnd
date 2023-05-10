@@ -6,12 +6,10 @@ import { ExerciseCreateDto, ExerciseReadDto } from '../../../src/exercises/dto';
 
 export async function createExercise(
   exercisesApi: string,
-  requestCookieHeaders: { headers: { Cookie: string[] } },
-  userId: number
+  requestCookieHeaders: { headers: { Cookie: string[] } }
 ) {
   // 1. create exercise
   const exerciseData: ExerciseCreateDto = {
-    user_id: userId,
     name: faker.word.noun(),
     muscle_group_id: MUSCLE_GROUPS_DATA[0].id
   };
@@ -21,7 +19,7 @@ export async function createExercise(
     requestCookieHeaders
   );
   expect(creationResult.status).toEqual(HttpStatus.CREATED);
-  expect(creationResult.data.item).toMatchObject(exerciseData);
+  expect(creationResult.data.item.name).toEqual(exerciseData.name);
 
   const createdExerciseId = creationResult.data.item.id;
 

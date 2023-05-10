@@ -3,7 +3,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { Set } from '../../sets/models';
 
 type SetDataToCreate = {
-  reps: number;
+  reps: string;
   comment?: string;
   outcome_id: number;
 };

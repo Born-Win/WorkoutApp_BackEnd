@@ -7,7 +7,11 @@ import {
 } from 'sequelize-typescript';
 import { Outcome } from '../../outcomes/models';
 
-@Table({ tableName: 'sets', timestamps: false })
+@Table({
+  tableName: 'sets',
+  createdAt: 'created_at',
+  updatedAt: 'updated_at'
+})
 export class Set extends Model {
   @Column({
     type: DataType.INTEGER,
@@ -20,7 +24,7 @@ export class Set extends Model {
     type: DataType.DECIMAL,
     allowNull: false
   })
-  reps: number;
+  reps: string;
 
   @Column({
     type: DataType.STRING

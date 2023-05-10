@@ -4,28 +4,23 @@ type OutcomesInput = {
   getAll: {
     query: {
       exercise_id: string;
+      date?: string;
     };
   };
   create: {
     query: {
       exercise_id: string;
-      date?: string;
     };
     body: {
       data: {
         weight: string;
         comment?: string;
+        date: string;
         sets: {
           reps: number;
           comment?: string;
         }[];
       }[];
-    };
-  };
-  updateOne: {
-    param: string; // id
-    body: {
-      weight: string;
     };
   };
 };
@@ -42,6 +37,7 @@ const createOutcomeBodyDataValidationSchema = Joi.object<
 >({
   weight: Joi.number().positive().required(), // decimal
   comment: Joi.string(),
+  date: Joi.date().raw(),
   sets: setsValidationSchema.required()
 });
 
@@ -58,12 +54,6 @@ export const outcomeValidationSchema = {
     }),
     body: Joi.object({
       data: Joi.array().items(createOutcomeBodyDataValidationSchema.required())
-    })
-  }),
-  updateOne: Joi.object<OutcomesInput['updateOne']>({
-    param: Joi.number().integer().positive(),
-    body: Joi.object({
-      weight: Joi.number().positive().required() // decimal
     })
   })
 };

@@ -11,7 +11,6 @@ import { Set } from '../../sets/models';
 
 @Table({
   tableName: 'outcomes',
-  timestamps: false,
   createdAt: 'created_at',
   updatedAt: 'updated_at',
   indexes: [
@@ -41,9 +40,10 @@ export class Outcome extends Model {
   comment?: string;
 
   @Column({
-    type: DataType.STRING
+    type: DataType.STRING,
+    allowNull: false
   })
-  date?: string; // YYYY-MM-DD
+  date: string; // YYYY-MM-DD
 
   @ForeignKey(() => Exercise)
   @Column({
@@ -51,12 +51,6 @@ export class Outcome extends Model {
     allowNull: false
   })
   exercise_id: number;
-
-  // @Column({
-  //   type: DataType.STRING, // YYYY-MM-DD
-  //   allowNull: false
-  // })
-  // date: Date;
 
   @HasMany(() => Set, 'outcome_id')
   sets: Set[];

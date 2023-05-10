@@ -22,7 +22,8 @@ import {
   ApiBody,
   ApiConflictResponse,
   ApiNotFoundResponse,
-  ApiBadRequestResponse
+  ApiBadRequestResponse,
+  ApiParam
 } from '@nestjs/swagger';
 import {
   HTTP_EXCEPTION_DEFAULT_RESPONSE,
@@ -84,6 +85,12 @@ export class ExerciseController {
   )
   @ApiCookieAuth('accessToken')
   @UsePipes(new JoiValidationPipe(exerciseValidationSchema.getAll))
+  @ApiParam({
+    name: 'muscle_group_id',
+    schema: {
+      type: 'string'
+    }
+  })
   @Get('all')
   async getAll(@Query() query: { muscle_group_id: string }, @Req() req) {
     const exercises = await this.exerciseService.getAll(
@@ -108,15 +115,18 @@ export class ExerciseController {
   @ApiCreatedResponse(
     generateSuccessfulContentObject({
       item: {
-        $ref: getSchemaPath(ExerciseReadDto)
+        $ref: getSchemaPath(ExerciseShortReadDto)
       }
     })
   )
   @ApiCookieAuth('accessToken')
   @UsePipes(new JoiValidationPipe(exerciseValidationSchema.createOne))
   @Post()
-  async createOne(@Body() body: ExerciseCreateDto) {
-    const createdExercise = await this.exerciseService.createOne(body);
+  async createOne(@Body() body: ExerciseCreateDto, @Req() req) {
+    const createdExercise = await this.exerciseService.createOne(
+      req.user.id,
+      body
+    );
 
     return {
       success: true,

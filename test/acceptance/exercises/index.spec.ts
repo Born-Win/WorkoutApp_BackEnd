@@ -4,7 +4,6 @@ import { faker } from '@faker-js/faker';
 import { NestApplication } from '@nestjs/core';
 import { HttpStatus } from '@nestjs/common';
 import { App } from '../../../src/app/app';
-import { UserReadDto } from '../../../src/users/dto';
 import { UserRegistrationDto } from '../../../src/auth/dto';
 import {
   ExerciseCreateDto,
@@ -26,7 +25,6 @@ describe('Exercises API', () => {
     await app.listen(PORT);
   });
 
-  let createdUser: UserReadDto;
   let cookies: string[];
 
   beforeEach(async () => {
@@ -49,7 +47,6 @@ describe('Exercises API', () => {
       result.headers['set-cookie'].find(element => element.match('accessToken'))
     ).not.toBeUndefined();
 
-    createdUser = result.data.user;
     cookies = result.headers['set-cookie'];
   });
 
@@ -64,7 +61,6 @@ describe('Exercises API', () => {
 
       for (let i = 0; i < 2; i++) {
         const exerciseData: ExerciseCreateDto = {
-          user_id: createdUser.id,
           name: faker.word.noun(),
           muscle_group_id: muscleGroupId
         };
@@ -74,7 +70,7 @@ describe('Exercises API', () => {
           requestCookieHeaders
         );
         expect(creationResult.status).toEqual(HttpStatus.CREATED);
-        expect(creationResult.data.item).toMatchObject(exerciseData);
+        expect(creationResult.data.item.name).toEqual(exerciseData.name);
 
         const { id, name } = creationResult.data.item as ExerciseReadDto;
         createdExercises.push({
@@ -101,7 +97,6 @@ describe('Exercises API', () => {
     it('Should return create and return exercise', async () => {
       // 1. create exercise
       const exerciseData: ExerciseCreateDto = {
-        user_id: createdUser.id,
         name: faker.word.noun(),
         muscle_group_id: MUSCLE_GROUPS_DATA[0].id
       };
@@ -111,7 +106,7 @@ describe('Exercises API', () => {
         createRequestCookieHeaders(cookies)
       );
       expect(creationResult.status).toEqual(HttpStatus.CREATED);
-      expect(creationResult.data.item).toMatchObject(exerciseData);
+      expect(creationResult.data.item.name).toEqual(exerciseData.name);
 
       const createdExerciseId = creationResult.data.item.id;
 
@@ -130,7 +125,6 @@ describe('Exercises API', () => {
     it('Should return conflict creating error of duplicated exercise', async () => {
       // 1. create exercise
       const exerciseData: ExerciseCreateDto = {
-        user_id: createdUser.id,
         name: faker.word.noun(),
         muscle_group_id: MUSCLE_GROUPS_DATA[0].id
       };
@@ -140,7 +134,7 @@ describe('Exercises API', () => {
         createRequestCookieHeaders(cookies)
       );
       expect(creationResult.status).toEqual(HttpStatus.CREATED);
-      expect(creationResult.data.item).toMatchObject(exerciseData);
+      expect(creationResult.data.item.name).toEqual(exerciseData.name);
 
       const createdExerciseId = creationResult.data.item.id;
 
@@ -178,8 +172,7 @@ describe('Exercises API', () => {
       // 1. create exercise
       const createdExercise = await createExercise(
         exercisesApi,
-        requestCookieHeaders,
-        createdUser.id
+        requestCookieHeaders
       );
 
       const { id: exerciseId } = createdExercise;
@@ -201,6 +194,7 @@ describe('Exercises API', () => {
         requestCookieHeaders
       );
       expect(getExerciseResult.status).toEqual(HttpStatus.OK);
+      console.log(getExerciseResult.data.item);
       expect(getExerciseResult.data.item).toMatchObject({
         ...createdExercise,
         ...updatedExerciseData, // rewrite name
@@ -217,8 +211,7 @@ describe('Exercises API', () => {
       for (let i = 0; i < 2; i++) {
         const createdExercise = await createExercise(
           exercisesApi,
-          requestCookieHeaders,
-          createdUser.id
+          requestCookieHeaders
         );
 
         createdExercises.push(createdExercise);
@@ -251,8 +244,7 @@ describe('Exercises API', () => {
     // 1. create exercise
     const createdExercise = await createExercise(
       exercisesApi,
-      requestCookieHeaders,
-      createdUser.id
+      requestCookieHeaders
     );
 
     const { id: exerciseId } = createdExercise;

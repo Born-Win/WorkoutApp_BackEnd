@@ -6,7 +6,6 @@ import { OutcomeRepository } from '../repositories';
 import {
   OutcomeCreateDto,
   OutcomeCreateWithSetsDto,
-  OutcomeReadDto,
   OutcomeReadWithSetsDto
 } from '../dto';
 import { SetCreateDto } from '../../sets/dto';
@@ -19,7 +18,10 @@ export class OutcomeService {
     @Inject('SEQUELIZE') private readonly sequelize: Sequelize
   ) {}
 
-  async getAllByExercise(exerciseId: number, filters?: { date: string }) {
+  async getAllByExercise(
+    exerciseId: number,
+    filters?: { date: string }
+  ): Promise<OutcomeReadWithSetsDto[]> {
     const foundOutcomes = await this.outcomeRepository.findAll({
       exercise_id: exerciseId,
       ...filters
@@ -27,10 +29,17 @@ export class OutcomeService {
     return foundOutcomes.map(outcome => new OutcomeReadWithSetsDto(outcome));
   }
 
-  async create(outcomeDataArray: OutcomeCreateWithSetsDto[]) {
+  async create(
+    exercise_id: number,
+    outcomeDataArray: OutcomeCreateWithSetsDto[]
+  ) {
     return this.sequelize.transaction(async transaction => {
       const outcomeToCreateArray = outcomeDataArray.map(
-        outcomeWithSets => new OutcomeCreateDto(outcomeWithSets)
+        outcomeWithSets =>
+          new OutcomeCreateDto({
+            exercise_id,
+            ...outcomeWithSets
+          })
       );
 
       const createdOutcomes =
@@ -49,7 +58,7 @@ export class OutcomeService {
       for (const outcome of outcomeDataArray) {
         const foundOutcome = _.find(
           createdOutcomes,
-          new OutcomeCreateDto(outcome)
+          new OutcomeCreateDto({ ...outcome, exercise_id })
         ) as OutcomeCreateWithSetsDto & { id: number };
 
         if (!foundOutcome) {
@@ -66,17 +75,7 @@ export class OutcomeService {
         });
       }
 
-      console.log(createdOutcomes);
-      console.log(setsToCreate);
-
       await this.setService.create(setsToCreate, { transaction });
     });
-
-    // const createdOutcome = await this.outcomeRepository.createOne(outcomeData);
-    // return new OutcomeReadDto(createdOutcome);
-  }
-
-  async udpateOne(id: number, outcomeData: { weight: string }) {
-    await this.outcomeRepository.updateOne(id, outcomeData);
   }
 }

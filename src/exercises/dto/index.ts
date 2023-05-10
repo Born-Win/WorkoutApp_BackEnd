@@ -4,13 +4,10 @@ export class ExerciseCreateDto {
   @ApiProperty()
   name: string;
   @ApiProperty()
-  user_id: number;
-  @ApiProperty()
   muscle_group_id: number;
 
   constructor(data) {
     this.name = data.name;
-    this.user_id = data.user_id;
     this.muscle_group_id = data.muscle_group_id;
   }
 }

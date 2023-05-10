@@ -34,12 +34,13 @@ export class ExerciseService {
     return exercises.map(exercise => new ExerciseShortReadDto(exercise));
   }
 
-  async createOne(exerciseData: ExerciseCreateDto) {
+  async createOne(user_id: number, exerciseData: ExerciseCreateDto) {
     try {
-      const createdExercise = await this.exerciseRepository.createOne(
-        exerciseData
-      );
-      return new ExerciseReadDto(createdExercise);
+      const createdExercise = await this.exerciseRepository.createOne({
+        user_id,
+        ...exerciseData
+      });
+      return new ExerciseShortReadDto(createdExercise);
     } catch (err) {
       if (
         err instanceof UniqueConstraintError &&

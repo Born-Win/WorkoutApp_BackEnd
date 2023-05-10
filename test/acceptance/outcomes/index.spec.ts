@@ -4,17 +4,14 @@ import { faker } from '@faker-js/faker';
 import { NestApplication } from '@nestjs/core';
 import { HttpStatus } from '@nestjs/common';
 import { App } from '../../../src/app/app';
-import { UserReadDto } from '../../../src/users/dto';
 import { UserRegistrationDto } from '../../../src/auth/dto';
-import {
-  ExerciseCreateDto,
-  ExerciseReadDto,
-  ExerciseShortReadDto
-} from '../../../src/exercises/dto';
+import { ExerciseReadDto } from '../../../src/exercises/dto';
 import { DEFAULT_USER_PASSWORD } from '../../consts';
 import { createRequestCookieHeaders } from '../auth/utils';
 import { createExercise } from '../exercises/utils';
 import { OutcomeCreateWithSetsDto } from '../../../src/outcomes/dto';
+
+const DEFAULT_OUTCOME_DATE = '2023-01-01';
 
 describe('Outcomes API', () => {
   const PORT = process.env.PORT || 3000;
@@ -28,7 +25,6 @@ describe('Outcomes API', () => {
     await app.listen(PORT);
   });
 
-  let createdUser: UserReadDto;
   let createdExercise: ExerciseReadDto;
   let cookies: string[];
 
@@ -52,13 +48,11 @@ describe('Outcomes API', () => {
       result.headers['set-cookie'].find(element => element.match('accessToken'))
     ).not.toBeUndefined();
 
-    createdUser = result.data.user;
     cookies = result.headers['set-cookie'];
 
     createdExercise = await createExercise(
       exercisesApi,
-      createRequestCookieHeaders(cookies),
-      createdUser.id
+      createRequestCookieHeaders(cookies)
     );
   });
 
@@ -67,56 +61,61 @@ describe('Outcomes API', () => {
       const requestCookieHeaders = createRequestCookieHeaders(cookies);
 
       // 1. create outcomes
-      const outcomesDataToCreate: Omit<OutcomeCreateWithSetsDto, 'exercise_id'>[] = [
+      const outcomesDataToCreate: OutcomeCreateWithSetsDto[] = [
         {
           weight: faker.random.numeric(),
           comment: faker.random.word(),
+          date: DEFAULT_OUTCOME_DATE,
           sets: [
             {
-              reps: +faker.random.numeric(),
+              reps: faker.random.numeric(),
               comment: faker.random.word()
             },
             {
-              reps: +faker.random.numeric()
+              reps: faker.random.numeric()
             }
           ]
         },
         {
           weight: faker.random.numeric(),
+          date: DEFAULT_OUTCOME_DATE,
           sets: [
             {
-              reps: +faker.random.numeric()
+              reps: faker.random.numeric()
             },
             {
-              reps: +faker.random.numeric()
+              reps: faker.random.numeric()
             }
           ]
         }
       ];
 
-      console.log(outcomesDataToCreate.at(0), outcomesDataToCreate.at(1));
-
-      const createOutcomesResult = await axios.post(outcomesApi,
+      const createOutcomesResult = await axios.post(
+        outcomesApi,
         { data: outcomesDataToCreate },
         {
-        ...requestCookieHeaders,
-        params: {
-          exercise_id: createdExercise.id
+          ...requestCookieHeaders,
+          params: {
+            exercise_id: createdExercise.id
+          }
         }
-      });
+      );
       expect(createOutcomesResult.status).toEqual(HttpStatus.CREATED);
 
       // 2. get just created outcomes
       const getOutcomesResult = await axios.get(`${outcomesApi}/all`, {
         ...requestCookieHeaders,
         params: {
-          exercise_id: createdExercise.id
+          exercise_id: createdExercise.id,
+          date: DEFAULT_OUTCOME_DATE
         }
       });
       expect(getOutcomesResult.status).toEqual(HttpStatus.OK);
-      // console.log(getOutcomesResult.data.items);
-      expect(getOutcomesResult.data.items).toEqual(
-        expect.arrayContaining(outcomesDataToCreate)
+      expect(getOutcomesResult.data.items[0]).toMatchObject(
+        outcomesDataToCreate[0]
+      );
+      expect(getOutcomesResult.data.items[1]).toMatchObject(
+        outcomesDataToCreate[1]
       );
     });
   });
