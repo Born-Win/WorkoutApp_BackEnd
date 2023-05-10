@@ -1,7 +1,8 @@
 import {
   Injectable,
   ConflictException,
-  NotFoundException
+  NotFoundException,
+  BadRequestException
 } from '@nestjs/common';
 import { UniqueConstraintError } from 'sequelize';
 import { ExerciseRepository } from '../repositories';
@@ -59,7 +60,14 @@ export class ExerciseService {
 
   async renameOne(id: string, name: string) {
     try {
-      await this.exerciseRepository.updateOneById(id, { name });
+      const [updatedItems] = await this.exerciseRepository.updateOneById(id, {
+        name
+      });
+      if (!updatedItems) {
+        throw new BadRequestException(
+          `Unable to rename exercise with "${name}"`
+        );
+      }
     } catch (err) {
       if (
         err instanceof UniqueConstraintError &&
