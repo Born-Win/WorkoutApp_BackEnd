@@ -20,7 +20,7 @@ export class CreationBodyPipeTransform implements PipeTransform {
         }
         outcome.date = moment(outcome.date).format('YYYY-MM-DD');
       }
-      return value;
+      return { data: outcomeDataArray };
     } catch (err) {
       throw new Error('Outcome date is invalid');
     }

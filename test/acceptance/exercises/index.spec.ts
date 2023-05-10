@@ -29,7 +29,7 @@ describe('Exercises API', () => {
 
   beforeEach(async () => {
     const userDataToCreate: UserRegistrationDto = {
-      email: faker.random.word() + '@fakemail.com',
+      email: faker.random.word() + faker.random.word() + '@fakemail.com',
       password: DEFAULT_USER_PASSWORD,
       confirmation_password: DEFAULT_USER_PASSWORD
     };

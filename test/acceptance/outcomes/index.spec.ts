@@ -11,7 +11,7 @@ import { createRequestCookieHeaders } from '../auth/utils';
 import { createExercise } from '../exercises/utils';
 import { OutcomeCreateWithSetsDto } from '../../../src/outcomes/dto';
 
-const DEFAULT_OUTCOME_DATE = '2023-01-01';
+const DEFAULT_OUTCOME_DATE = '2023-05-10';
 
 describe('Outcomes API', () => {
   const PORT = process.env.PORT || 3000;
@@ -30,7 +30,7 @@ describe('Outcomes API', () => {
 
   beforeEach(async () => {
     const userDataToCreate: UserRegistrationDto = {
-      email: faker.random.word() + '@fakemail.com',
+      email: faker.random.word() + faker.random.word() + '@fakemail.com',
       password: DEFAULT_USER_PASSWORD,
       confirmation_password: DEFAULT_USER_PASSWORD
     };

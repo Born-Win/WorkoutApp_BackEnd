@@ -14,7 +14,7 @@ type OutcomesInput = {
     body: {
       data: {
         weight: string;
-        comment?: string;
+        comment: string | null;
         date: string;
         sets: {
           reps: number;
@@ -36,7 +36,7 @@ const createOutcomeBodyDataValidationSchema = Joi.object<
   OutcomesInput['create']['body']['data'][number]
 >({
   weight: Joi.number().positive().required(), // decimal
-  comment: Joi.string(),
+  comment: Joi.string().allow(null).required(),
   date: Joi.date().raw(),
   sets: setsValidationSchema.required()
 });

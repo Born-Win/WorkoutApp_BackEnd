@@ -6,7 +6,7 @@ import {
   ForeignKey,
   HasMany
 } from 'sequelize-typescript';
-import { Exercise } from '../../exercises/models/exercise';
+import { Exercise } from '../../exercises/models';
 import { Set } from '../../sets/models';
 
 @Table({

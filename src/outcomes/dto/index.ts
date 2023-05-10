@@ -23,7 +23,7 @@ export class OutcomeCreateWithSetsDto {
 
   constructor(data) {
     this.weight = data.weight;
-    this.comment = data.comment || null;
+    this.comment = data.comment ?? null;
     this.date = data.date;
     this.sets = data.sets;
   }

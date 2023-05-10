@@ -89,8 +89,10 @@ export class OutcomeController {
       }
     }
   })
-  @UsePipes(new CreationBodyPipeTransform())
-  @UsePipes(new JoiValidationPipe(outcomeValidationSchema.create))
+  @UsePipes(
+    new CreationBodyPipeTransform(),
+    new JoiValidationPipe(outcomeValidationSchema.create)
+  )
   @Post()
   async create(
     @Query() query: { exercise_id: string },
