@@ -36,6 +36,6 @@ export const exerciseValidationSchema = {
     body: Joi.object({
       name: Joi.string().min(2).max(30).required()
     }),
-    param: Joi.number().positive()
+    param: Joi.number().integer().positive()
   })
 };

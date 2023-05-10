@@ -12,39 +12,7 @@ import {
 } from '../../../src/exercises/dto';
 import { DEFAULT_USER_PASSWORD, MUSCLE_GROUPS_DATA } from '../../consts';
 import { createRequestCookieHeaders } from '../auth/utils';
-
-async function createExercise(
-  exercisesApi: string,
-  requestCookieHeaders: { headers: { Cookie: string[] } }
-) {
-  // 1. create exercise
-  const exerciseData: ExerciseCreateDto = {
-    name: faker.word.noun(),
-    muscle_group_id: MUSCLE_GROUPS_DATA[0].id
-  };
-  const creationResult = await axios.post(
-    exercisesApi,
-    exerciseData,
-    requestCookieHeaders
-  );
-  expect(creationResult.status).toEqual(HttpStatus.CREATED);
-  expect(creationResult.data.item.name).toEqual(exerciseData.name);
-
-  const createdExerciseId = creationResult.data.item.id;
-
-  // 2. get just created exercise
-  const getExerciseResult = await axios.get(
-    `${exercisesApi}/view/${createdExerciseId}`,
-    requestCookieHeaders
-  );
-  expect(getExerciseResult.status).toEqual(HttpStatus.OK);
-  expect(getExerciseResult.data.item).toMatchObject({
-    ...exerciseData,
-    id: createdExerciseId
-  });
-
-  return creationResult.data.item as ExerciseReadDto;
-}
+import { createExercise } from './utils';
 
 describe('Exercises API', () => {
   const PORT = process.env.PORT || 3000;
@@ -61,7 +29,7 @@ describe('Exercises API', () => {
 
   beforeEach(async () => {
     const userDataToCreate: UserRegistrationDto = {
-      email: faker.random.word() + '@fakemail.com',
+      email: faker.random.word() + faker.random.word() + '@fakemail.com',
       password: DEFAULT_USER_PASSWORD,
       confirmation_password: DEFAULT_USER_PASSWORD
     };

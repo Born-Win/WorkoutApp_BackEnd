@@ -2,7 +2,9 @@ import { Sequelize } from 'sequelize-typescript';
 import config = require('config');
 import { User } from '../../users/models';
 import { MuscleGroup } from '../../muscle-groups/models';
-import { Exercise } from '../../exercises/models';
+import { Exercise } from '../../exercises/models/exercise';
+import { Outcome } from '../../outcomes/models';
+import { Set } from '../../sets/models';
 
 export const databaseProviders = [
   {
@@ -12,13 +14,11 @@ export const databaseProviders = [
 
       await sequelize.authenticate();
 
-      const models: Record<string, any> = {};
-
-      sequelize.addModels([User, MuscleGroup, Exercise]);
+      sequelize.addModels([User, MuscleGroup, Exercise, Outcome, Set]);
 
       await sequelize.sync({ alter: true });
 
-      return { sequelize, models };
+      return sequelize;
     }
   }
 ];
