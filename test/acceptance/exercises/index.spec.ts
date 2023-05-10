@@ -187,6 +187,9 @@ describe('Exercises API', () => {
         requestCookieHeaders
       );
       expect(renamingResult.status).toEqual(HttpStatus.OK);
+      expect(renamingResult.data.item).toMatchObject({
+        name: updatedExerciseData.name
+      });
 
       // 3. get renamed exercise
       const getExerciseResult = await axios.get(
@@ -194,7 +197,6 @@ describe('Exercises API', () => {
         requestCookieHeaders
       );
       expect(getExerciseResult.status).toEqual(HttpStatus.OK);
-      console.log(getExerciseResult.data.item);
       expect(getExerciseResult.data.item).toMatchObject({
         ...createdExercise,
         ...updatedExerciseData, // rewrite name

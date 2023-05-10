@@ -153,7 +153,10 @@ export class ExerciseController {
     await this.exerciseService.renameOne(id, body.name);
 
     return {
-      success: true
+      success: true,
+      item: {
+        name: body.name
+      }
     };
   }
 
