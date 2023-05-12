@@ -40,6 +40,15 @@ export class OutcomeController {
 
   @ApiUnauthorizedResponse(HTTP_EXCEPTION_DEFAULT_RESPONSE)
   @ApiBadRequestResponse(HTTP_EXCEPTION_DEFAULT_RESPONSE)
+  @ApiParam({
+    name: 'exercise_id',
+    type: 'string'
+  })
+  @ApiParam({
+    name: 'date',
+    type: 'string',
+    required: false
+  })
   @ApiOkResponse(
     generateSuccessfulContentObject({
       items: {
