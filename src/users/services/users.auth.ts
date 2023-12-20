@@ -121,8 +121,7 @@ export class UserAuthService {
 
     response.cookie('accessToken', newAccessToken, {
       maxAge: config.get('jwt.accessToken.expirationTime'),
-      httpOnly: true,
-      path: '/auth'
+      httpOnly: true
     });
 
     await this.userRepository.updateById(user.id, {
