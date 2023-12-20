@@ -113,14 +113,16 @@ export class UserAuthService {
 
     response.cookie('refreshToken', newRefreshToken, {
       maxAge: config.get('jwt.refreshToken.expirationTime'),
-      httpOnly: true
+      httpOnly: true,
+      path: '/auth/refresh'
     });
 
     const newAccessToken = this.signJwtAccessToken(user);
 
     response.cookie('accessToken', newAccessToken, {
       maxAge: config.get('jwt.accessToken.expirationTime'),
-      httpOnly: true
+      httpOnly: true,
+      path: '/auth'
     });
 
     await this.userRepository.updateById(user.id, {
